@@ -10,81 +10,67 @@
      * @returns {number} кол-во островов
      */
     function solution(map) {
-        let arr = map;
-        addWater(arr);
+        let arr = JSON.parse(JSON.stringify(map));
 
         let counterIsland = 0;
 
         let sizeX = arr[0].length;
         let sizeY = arr.length;
 
-        let bufferRow = [];
-        let currentRow = [];
+        for(let i = 0; i < sizeY; i++) {
+            let topRow = arr[i - 1];
+            let currentRow = arr[i];
 
-        for(let i = 0; i < sizeX; i++) {
-            bufferRow.push(WATER);
-            currentRow.push(WATER);
-        }
+            for(let j = 0; j < sizeX; j++) {
 
-        for(let i = 1; i < sizeY; i++) {
+                if(currentRow[j] === ISLAND) {
+                    let leftCell = currentRow[j - 1] || WATER;
+                    let topCell = topRow ? topRow[j] : WATER;
 
-            for(let j = 1; j < sizeX; j++) {
-                if(arr[i][j] === ISLAND) {
-                    let left = currentRow[j - 1];
-                    let top = bufferRow[j];
-
-                    if(left === WATER && top === WATER) {
+                    if(leftCell === WATER && topCell === WATER) {
+                        // it is start of new island
                         counterIsland++;
                         currentRow[j] = counterIsland;
-                    } else if(left !== WATER && top === WATER) {
-                        currentRow[j] = left;
-                    } else if(left === WATER && top !== WATER) {
-                        currentRow[j] = top;
-                    } else if(left !== WATER && top !== WATER) {
-                        if(left === top) {
-                            currentRow[j] = left;
+                    } else if(leftCell !== WATER && topCell === WATER) {
+                        // it is continuation of left island
+                        currentRow[j] = leftCell;
+                    } else if(leftCell === WATER && topCell !== WATER) {
+                        // it is continuation of top island
+                        currentRow[j] = topCell;
+                    } else if(leftCell !== WATER && topCell !== WATER) {
+                        // it is intersection of left and top islands
+
+                        if(leftCell === topCell) {
+                            // number of left and top islands is the same
+                            currentRow[j] = leftCell;
                         } else {
+                            // number of left and top islands is not the same
+                            // so we should decrease island counter and
+                            // update island's numbers
                             counterIsland--;
-                            updateBufferRow(bufferRow, top, left);
+                            currentRow[j] = counterIsland;
+
+                            updateRow(topRow, topCell, counterIsland);
+                            updateRow(currentRow, leftCell, counterIsland);
                         }
                     }
                 } else {
                     currentRow[j] = WATER;
                 }
             }
-
-            bufferRow = currentRow;
-            currentRow = [];
-
-            fillWithWater(currentRow, sizeX);
         }
 
         return counterIsland;
     }
 
-    function addWater(arr) {
-        let zeroArr = [];
-        fillWithWater(zeroArr, arr[0].length);
+    /*
+     *
+     */
+    function updateRow(row, oldValue, newValue) {
 
-        arr.unshift(zeroArr);
-
-        for(let i = 0; i < arr.length; i++) {
-            arr[i].unshift(WATER);
-        }
-    }
-
-    function fillWithWater(arr, size) {
-
-        for(let i = 0; i < size; i++) {
-            arr.push(WATER);
-        }
-    }
-
-    function updateBufferRow(bufferRow, top, left) {
-
-        for(let i = 0; i < bufferRow.length; i++) {
-            if(bufferRow[i] === top) {
-                bufferRow[i] = left;
+        for(let i = 0; i < row.length; i++) {
+            if(row[i] === oldValue) {
+                row[i] = newValue;
             }
         }
     }

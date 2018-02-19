@@ -1,0 +1,66 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.outer {
+    display: flex;
+}
+
+.visualization-map {
+    padding: 10px;
+    margin: 0 20px;
+}
+
+.visualization-map__title {
+    margin: 10px 0;
+    font-size: 16px;
+    font-family: Arial;
+    font-weight: bold;
+}
+
+.visualization-map__result {
+    margin: 10px 0;
+    font-size: 14px;
+    font-family: Arial;
+}
+
+.visualization-map__row {
+    font-size: 0;
+    white-space: nowrap;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.visualization-map__cell {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    width: 20px;
+    height: 20px;
+
+    margin: 3px;
+    border: 2px solid #eee;
+    color: black;
+
+    font-size: 10px;
+    font-family: Arial;
+}
+
+.visualization-map__cell_water {
+    background-color: #65a6ff;
+    color: black;
+}
+
+.visualization-map__cell_island {
+    background-color: #fad946;
+    color: black;
+}
