@@ -46,12 +46,13 @@
 
                 await  makePause();
 
+                let leftCellElement = document.getElementById(`cell_${i}${j - 1}`);
+                let topCellElement = document.getElementById(`cell_${i - 1}${j}`);
+
                 if (arr[i][j] === ISLAND) {
                     let leftCell = currentRow[j - 1] || WATER;
                     let topCell = topRow ? topRow[j] : WATER;
 
-                    let leftCellElement = document.getElementById(`cell_${i}${j - 1}`);
-                    let topCellElement = document.getElementById(`cell_${i - 1}${j}`);
 
                     if (leftCell === WATER && topCell === WATER) {
                         changeElementBorderColor(leftCellElement, darkWaterColor);
@@ -99,16 +100,13 @@
                             await  makePause();
                         } else {
                             counterIsland--;
-                            currentRow[j] = counterIsland;
-                            currentCellElement.textContent = counterIsland;
+                            currentRow[j] = leftCell;
+                            currentCellElement.textContent = leftCell;
                             await  makePause();
 
                             updateCounterElement(counterIsland);
-                            updateNumberOfIslandCellsElements(i - 1, sizeX, topCell, counterIsland);
-                            updateNumberOfIslandCellsElements(i, sizeX, leftCell, counterIsland);
-
-                            updateNumberOfIslandCells(topRow, topCell, counterIsland);
-                            updateNumberOfIslandCells(currentRow, leftCell, counterIsland);
+                            updateNumberOfIslandCellsElements(i-1, j, sizeX, topCell, leftCell);
+                            updateNumberOfIslandCells(topRow, j , topCell, leftCell);
                             await  makePause();
                         }
                     }
@@ -118,11 +116,15 @@
                     changeElementBorderColor(currentCellElement, borderColorDefault);
 
                     await  makePause();
+
                 } else {
                     changeElementBorderColor(currentCellElement, borderColorDefault);
                     await  makePause();
                     currentRow[j] = WATER;
                 }
+
+                changeElementOpacity(topCellElement, 0.5);
+                await  makePause();
             }
 
             changeElementBackground(topRowElement, 'none');
@@ -162,17 +164,17 @@
         });
     }
 
-    function updateNumberOfIslandCells(row, oldValue, newValue) {
+    function updateNumberOfIslandCells(row, index, oldValue, newValue) {
 
-        for (let i = 1; i < row.length; i++) {
+        for (let i = index; i < row.length; i++) {
             if (row[i] === oldValue) {
                 row[i] = newValue;
             }
         }
     }
 
-    function updateNumberOfIslandCellsElements(i, sizeX, top, left) {
-        for (let k = 1; k < sizeX; k++) {
+    function updateNumberOfIslandCellsElements(i, index, sizeX, top, left) {
+        for (let k = index; k < sizeX; k++) {
             let cellElement = document.getElementById(`cell_${i}${k}`);
 
             if (cellElement.textContent === `${top}`) {

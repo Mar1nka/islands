@@ -10,16 +10,18 @@
      * @returns {number} кол-во островов
      */
     function solution(map) {
-        let arr = JSON.parse(JSON.stringify(map));
+        let arr = map;
 
         let counterIsland = 0;
 
         let sizeX = arr[0].length;
         let sizeY = arr.length;
 
+        let topRow = undefined;
+
         for(let i = 0; i < sizeY; i++) {
-            let topRow = arr[i - 1];
-            let currentRow = arr[i];
+            let currentRow = [];
+            copyRow(currentRow, arr[i]);
 
             for(let j = 0; j < sizeX; j++) {
 
@@ -48,27 +50,32 @@
                             // so we should decrease island counter and
                             // update island's numbers
                             counterIsland--;
-                            currentRow[j] = counterIsland;
+                            currentRow[j] = leftCell;
 
-                            updateRow(topRow, topCell, counterIsland);
-                            updateRow(currentRow, leftCell, counterIsland);
+                            updateNumberOfIslandCells(topRow, j , topCell, leftCell);
                         }
                     }
                 } else {
                     currentRow[j] = WATER;
                 }
             }
+
+            topRow = currentRow;
         }
 
         return counterIsland;
     }
 
-    /*
-     *
-     */
-    function updateRow(row, oldValue, newValue) {
+    function copyRow(row, fromRow) {
+        for(let k = 0; k < fromRow.length; k++) {
+            row[k] = fromRow[k];
+        }
+    }
 
-        for(let i = 0; i < row.length; i++) {
+
+    function updateNumberOfIslandCells(row, index, oldValue, newValue) {
+
+        for(let i = index; i < row.length; i++) {
             if(row[i] === oldValue) {
                 row[i] = newValue;
             }
